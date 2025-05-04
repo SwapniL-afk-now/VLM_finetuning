@@ -89,33 +89,3 @@ python qwen_vl_finetune.py \
     # --max_steps 1000 # Optionally set a maximum number of steps
     # --no_4bit # Add this flag to disable 4-bit quantization (requires much more VRAM)
 
-Key Command-Line Arguments:
-    --dataset_path: Required. Path to the training JSON file.
-    --image_dir: Required. Path to the directory containing training images.
-    --output_dir: Directory to save checkpoints and the final model adapters.
-    --model_name_or_path: Base model identifier from Hugging Face Hub or local path.
-    --learning_rate: Peak learning rate for the AdamW optimizer.
-    --num_train_epochs: Total number of times to iterate over the dataset.
-    --batch_size: Number of samples processed per device before gradient accumulation.
-    --gradient_accumulation_steps: Number of steps to accumulate gradients before an optimizer step. Effective batch size is batch_size * num_gpus * gradient_accumulation_steps.
-    --lora_r, --lora_alpha, --lora_dropout: LoRA configuration parameters.
-    --freeze_vision_encoder / --no-freeze_vision_encoder: Control freezing of the vision encoder (default is frozen).
-    --use_amp / --no_amp: Enable/disable Automatic Mixed Precision (default enabled on CUDA).
-    --use_4bit / --no_4bit: Enable/disable 4-bit quantization (default enabled).
-    --bf16: Use bfloat16 for AMP/quantization if supported.
-    --logging_steps: How often to print training logs.
-    --save_steps: How often to save model checkpoints.
-    --warmup_steps: Number of warmup steps for the learning rate scheduler.
-    --max_steps: Optional maximum number of training steps (overrides epochs).
-    --device: Device to use (e.g., cuda:0, cpu).
-    Run python qwen_vl_finetune.py --help for a full list of options.
-    Model & Fine-Tuning Details
-    Base Model: Qwen2.5-VL-7B-Instruct
-    Fine-Tuning Method: LoRA (Parameter-Efficient Fine-Tuning)
-    Quantization: 4-bit NF4 with double quantization (QLoRA-style) via bitsandbytes.
-    LoRA Config:
-    Rank (r): 8 (configurable via --lora_r)
-    Alpha (lora_alpha): 16 (configurable via --lora_alpha)
-    Dropout (lora_dropout): 0.05 (configurable via --lora_dropout)
-    Target Modules: Attention projections (q_proj, k_proj, v_proj, o_proj) and Feed-Forward layers (gate_proj, up_proj, down_proj).
-    Frozen Layers: The vision encoder (model.visual) weights are frozen by default to preserve robust image understanding capabilities learned during pre-training. Only the LoRA adapters and potentially language model components (depending on LoRA target modules) are trained.
